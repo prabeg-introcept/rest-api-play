@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\User\WorklogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function(){
     Route::post('/login', [LoginController::class, 'store']);
+    Route::group(['prefix'=>'users', 'middleware'=>'auth:sanctum'], function(){
+        Route::apiResource('/{user}/worklogs', WorklogController::class);
+    });
+
 });
