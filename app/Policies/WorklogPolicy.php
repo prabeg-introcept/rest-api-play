@@ -65,7 +65,7 @@ class WorklogPolicy
      */
     public function delete(User $user, Worklog $worklog)
     {
-        //
+        return $user->id === $worklog->user_id;
     }
 
     /**

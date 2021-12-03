@@ -81,6 +81,10 @@ class WorklogService
     public function delete(int $worklogId)
     {
         $worklog = $this->get($worklogId);
+        throw_if(auth()->user()->cannot('update', $worklog),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
         throw_if(!$worklog->delete(),
             WorklogNotDeletedException::class,
             Messages::ERROR_UPDATE_WORKLOG
