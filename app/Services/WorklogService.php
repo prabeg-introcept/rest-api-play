@@ -7,6 +7,7 @@ use App\Exceptions\Worklogs\WorklogNotCreatedException;
 use App\Exceptions\Worklogs\WorklogNotFoundException;
 use App\Models\Worklog;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class WorklogService
 {
@@ -37,5 +38,15 @@ class WorklogService
     public function get(int $worklogId): Worklog
     {
         return $this->worklog->findOrFail($worklogId);
+    }
+
+    public function all():Collection
+    {
+        $worklogs = $this->worklog->with('user.department')->get();
+        throw_if(!$worklogs,
+            WorklogNotFoundException::class,
+            Messages::ERROR_FETCH_WORKLOG
+        );
+        return $worklogs;
     }
 }

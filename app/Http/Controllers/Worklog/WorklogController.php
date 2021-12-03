@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Worklog;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worklogs\StoreWorklogRequest;
+use App\Http\Resources\WorklogCollection;
 use App\Http\Resources\WorklogResource;
 use App\Services\WorklogService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,11 +24,19 @@ class WorklogController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return WorklogCollection|JsonResponse|Response
      */
     public function index()
     {
-        //
+        try{
+            $worklogs = $this->worklogService->all();
+        }catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return new WorklogCollection($worklogs);
     }
 
     /**
