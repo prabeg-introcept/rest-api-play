@@ -6,6 +6,7 @@ use App\Constants\Messages;
 use App\Exceptions\Worklogs\WorklogNotCreatedException;
 use App\Exceptions\Worklogs\WorklogNotDeletedException;
 use App\Exceptions\Worklogs\WorklogNotFoundException;
+use App\Exceptions\Worklogs\WorklogNotUpdatedException;
 use App\Models\Worklog;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -49,6 +50,22 @@ class WorklogService
             Messages::ERROR_FETCH_WORKLOG
         );
         return $worklogs;
+    }
+
+    public function update(array $validatedWorklogData, int $worklogId): Worklog
+    {
+        $worklog = $this->get($worklogId);
+        if(!auth()->user()->is_admin){
+            throw_if(!$worklog->created_at->isToday(),
+                WorklogNotUpdatedException::class,
+                Messages::ERROR_UPDATE_WORKLOG_ON_DIFFERENT_DATE
+            );
+        }
+        throw_if(!$worklog->update($validatedWorklogData),
+            WorklogNotUpdatedException::class,
+            Messages::ERROR_UPDATE_WORKLOG
+        );
+        return $worklog;
     }
 
     public function delete(int $worklogId)

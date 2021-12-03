@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Worklog;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worklogs\StoreWorklogRequest;
+use App\Http\Requests\Worklogs\UpdateWorklogRequest;
 use App\Http\Resources\WorklogCollection;
 use App\Http\Resources\WorklogResource;
 use App\Services\WorklogService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Throwable;
 
@@ -80,8 +80,26 @@ class WorklogController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateWorklogRequest $request
+     * @param int $id
+     * @return WorklogResource|JsonResponse|Response
      */
+    public function update(UpdateWorklogRequest $request, $id)
     {
+        try{
+            $worklog = $this->worklogService->update($request->validated(), $id);
+        }catch(ModelNotFoundException $exception){
+            return response()->json([
+                'message' => "Worklog with id:$id does not exists"
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }
+        return new WorklogResource($worklog);
     }
 
     /**
