@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Worklog;
+namespace App\Http\Controllers\Api\Worklog;
 
 use App\Exceptions\Worklogs\UnauthorizedActionException;
 use App\Http\Controllers\Controller;

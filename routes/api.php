@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\User\WorklogController as UserWorklogController;
-use App\Http\Controllers\Worklog\WorklogController;
+use App\Http\Controllers\Api\Worklog\WorklogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
