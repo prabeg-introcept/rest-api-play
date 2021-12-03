@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\User;
+namespace App\Http\Controllers\Worklog;
 
-use App\Constants\FlashMessages;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WorklogCollection;
+use App\Http\Requests\Worklogs\StoreWorklogRequest;
+use App\Http\Resources\WorklogResource;
 use App\Services\WorklogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,25 +22,30 @@ class WorklogController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return WorklogCollection|JsonResponse|Response
+     * @return Response
      */
     public function index()
     {
-        try{
-            return new WorklogCollection($this->worklogService->getLoggedInUserWorklogs());
-        }catch(Throwable $exception) {
-            return response()->json([
-                'message' => $exception->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        //
     }
 
     /**
-     * @param Request $request
+     * Store a newly created resource in storage.
+     *
+     * @param StoreWorklogRequest $request
+     * @return WorklogResource|JsonResponse|Response
      */
-    public function store(Request $request)
+    public function store(StoreWorklogRequest $request)
     {
-        //
+        try{
+            $worklog = $this->worklogService->create($request->validated());
+        }catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+        Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return new WorklogResource($worklog);
     }
 
     /**

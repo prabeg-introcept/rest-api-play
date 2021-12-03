@@ -9,6 +9,7 @@ use JsonSerializable;
 
 class WorklogResource extends JsonResource
 {
+    public static $wrap = 'worklog';
     /**
      * Transform the resource into an array.
      *
