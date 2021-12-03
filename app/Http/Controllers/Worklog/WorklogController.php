@@ -73,6 +73,11 @@ class WorklogController extends Controller
                 'message' => "Worklog with id:$id does not exists"
             ],
                 Response::HTTP_BAD_REQUEST);
+        }catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+            Response::HTTP_BAD_REQUEST);
         }
         return new WorklogResource($worklog);
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\Messages;
+use App\Exceptions\Worklogs\UnauthorizedActionException;
 use App\Exceptions\Worklogs\WorklogNotCreatedException;
 use App\Exceptions\Worklogs\WorklogNotDeletedException;
 use App\Exceptions\Worklogs\WorklogNotFoundException;
@@ -39,7 +40,12 @@ class WorklogService
 
     public function get(int $worklogId): Worklog
     {
-        return $this->worklog->findOrFail($worklogId);
+        $worklog = $this->worklog->findOrFail($worklogId);
+        throw_if(auth()->user()->cannot('view', $worklog),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
+        return $worklog;
     }
 
     public function all():Collection
