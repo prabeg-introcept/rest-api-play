@@ -53,7 +53,7 @@ class WorklogPolicy
      */
     public function update(User $user, Worklog $worklog)
     {
-        //
+        return $user->id === $worklog->user_id;
     }
 
     /**

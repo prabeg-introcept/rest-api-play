@@ -62,6 +62,10 @@ class WorklogService
     {
         $worklog = $this->get($worklogId);
         if(!auth()->user()->is_admin){
+            throw_if(auth()->user()->cannot('update', $worklog),
+                UnauthorizedActionException::class,
+                Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+            );
             throw_if(!$worklog->created_at->isToday(),
                 WorklogNotUpdatedException::class,
                 Messages::ERROR_UPDATE_WORKLOG_ON_DIFFERENT_DATE
