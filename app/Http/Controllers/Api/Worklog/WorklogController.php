@@ -6,8 +6,9 @@ use App\Exceptions\Worklogs\UnauthorizedActionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worklogs\StoreWorklogRequest;
 use App\Http\Requests\Worklogs\UpdateWorklogRequest;
-use App\Http\Resources\WorklogCollection;
-use App\Http\Resources\WorklogResource;
+use App\Http\Resources\Worklog\WorklogCollection;
+use App\Http\Resources\Worklog\WorklogResource;
+use App\Models\Worklog;
 use App\Services\WorklogService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,7 @@ class WorklogController extends Controller
      */
     public function index()
     {
+        //$this->authorize('viewAny', Worklog::class);
         try{
             $worklogs = $this->worklogService->all();
         }catch(UnauthorizedActionException $exception){
@@ -54,8 +56,10 @@ class WorklogController extends Controller
      */
     public function store(StoreWorklogRequest $request)
     {
+        $worklogData = $request->validated();
+        $worklogData['user_id'] = auth()->user()->id;
         try{
-            $worklog = $this->worklogService->create($request->validated());
+            $worklog = $this->worklogService->create($worklogData);
         }catch(Throwable $exception){
             return response()->json([
                 'message' => $exception->getMessage()
@@ -84,7 +88,7 @@ class WorklogController extends Controller
             return response()->json([
                 'message' => "Worklog with id:$id does not exists"
             ],
-                Response::HTTP_BAD_REQUEST);
+                Response::HTTP_NOT_FOUND);
         }catch(Throwable $exception){
             return response()->json([
                 'message' => $exception->getMessage()

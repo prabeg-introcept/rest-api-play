@@ -10,19 +10,6 @@ class WorklogPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Perform pre-authorization checks.
-     *
-     * @param  \App\Models\User  $user
-     * @param  string  $ability
-     * @return void|bool
-     */
-    public function before(User $user, $ability)
-    {
-        if ($user->is_admin) {
-            return true;
-        }
-    }
 
     /**
      * Determine whether the user can view any models.
@@ -32,6 +19,7 @@ class WorklogPolicy
      */
     public function viewAny(User $user)
     {
+        dd('here');
         return $user->is_admin;
     }
 

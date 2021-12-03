@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Constants\FlashMessages;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WorklogCollection;
+use App\Http\Resources\Worklog\WorklogCollection;
 use App\Services\WorklogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

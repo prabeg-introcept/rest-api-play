@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Feedback;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use JsonSerializable;
 
-class WorklogCollection extends ResourceCollection
+class FeedbackCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
-     * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {

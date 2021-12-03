@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Worklogs;
+namespace App\Http\Requests\Feedbacks;
 
-use App\Constants\DbTables;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWorklogRequest extends FormRequest
+class UpdateFeedbackRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class StoreWorklogRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->is_admin;
     }
 
     /**
@@ -25,9 +24,7 @@ class StoreWorklogRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'string', 'max:80'],
-            'description' => ['nullable', 'string', 'max:255'],
-            //'user_id' => [sprintf('exists:%s,id', DbTables::USERS)]
+            'description' => ['required', 'string', 'max:80'],
         ];
     }
 }
