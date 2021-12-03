@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\Messages;
+use App\Exceptions\Worklogs\UnauthorizedActionException;
 use App\Exceptions\Worklogs\WorklogNotCreatedException;
 use App\Exceptions\Worklogs\WorklogNotDeletedException;
 use App\Exceptions\Worklogs\WorklogNotFoundException;
@@ -39,11 +40,20 @@ class WorklogService
 
     public function get(int $worklogId): Worklog
     {
-        return $this->worklog->findOrFail($worklogId);
+        $worklog = $this->worklog->findOrFail($worklogId);
+        throw_if(auth()->user()->cannot('view', $worklog),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
+        return $worklog;
     }
 
     public function all():Collection
     {
+        throw_if(auth()->user()->cannot('viewAny', Worklog::class),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
         $worklogs = $this->worklog->with('user.department')->get();
         throw_if(!$worklogs,
             WorklogNotFoundException::class,
@@ -56,6 +66,10 @@ class WorklogService
     {
         $worklog = $this->get($worklogId);
         if(!auth()->user()->is_admin){
+            throw_if(auth()->user()->cannot('update', $worklog),
+                UnauthorizedActionException::class,
+                Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+            );
             throw_if(!$worklog->created_at->isToday(),
                 WorklogNotUpdatedException::class,
                 Messages::ERROR_UPDATE_WORKLOG_ON_DIFFERENT_DATE
@@ -71,6 +85,10 @@ class WorklogService
     public function delete(int $worklogId)
     {
         $worklog = $this->get($worklogId);
+        throw_if(auth()->user()->cannot('update', $worklog),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
         throw_if(!$worklog->delete(),
             WorklogNotDeletedException::class,
             Messages::ERROR_UPDATE_WORKLOG

@@ -11,4 +11,5 @@ class Messages
     const ERROR_UPDATE_WORKLOG = 'Error while update worklog';
     const ERROR_UPDATE_WORKLOG_ON_DIFFERENT_DATE = 'Worklog can only be updated on the date they are created';
     const ERROR_DELETE_WORKLOG = 'Error while deleting worklog';
+    const ERROR_UNAUTHORIZED_ACTION_WORKLOG = 'Only the owner of the worklog or admin is authorized to perform the action';
 }
