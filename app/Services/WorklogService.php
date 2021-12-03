@@ -50,6 +50,10 @@ class WorklogService
 
     public function all():Collection
     {
+        throw_if(auth()->user()->cannot('viewAny', Worklog::class),
+            UnauthorizedActionException::class,
+            Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
+        );
         $worklogs = $this->worklog->with('user.department')->get();
         throw_if(!$worklogs,
             WorklogNotFoundException::class,
