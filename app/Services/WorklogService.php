@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Constants\Messages;
 use App\Exceptions\Worklogs\WorklogNotCreatedException;
+use App\Exceptions\Worklogs\WorklogNotDeletedException;
 use App\Exceptions\Worklogs\WorklogNotFoundException;
 use App\Models\Worklog;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -48,5 +49,14 @@ class WorklogService
             Messages::ERROR_FETCH_WORKLOG
         );
         return $worklogs;
+    }
+
+    public function delete(int $worklogId)
+    {
+        $worklog = $this->get($worklogId);
+        throw_if(!$worklog->delete(),
+            WorklogNotDeletedException::class,
+            Messages::ERROR_UPDATE_WORKLOG
+        );
     }
 }

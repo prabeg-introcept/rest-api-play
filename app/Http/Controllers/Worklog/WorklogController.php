@@ -80,23 +80,31 @@ class WorklogController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return Response
      */
-    public function update(Request $request, $id)
     {
-        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return JsonResponse|Response
      */
     public function destroy($id)
     {
-        //
+        try{
+            $worklog = $this->worklogService->delete($id);
+        }catch(ModelNotFoundException $exception){
+            return response()->json([
+                'message' => "Worklog with id:$id does not exists"
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }
