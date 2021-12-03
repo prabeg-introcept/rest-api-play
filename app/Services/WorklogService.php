@@ -33,4 +33,9 @@ class WorklogService
         );
         return $worklog;
     }
+
+    public function get(int $worklogId): Worklog
+    {
+        return $this->worklog->findOrFail($worklogId);
+    }
 }

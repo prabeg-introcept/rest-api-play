@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Worklogs\StoreWorklogRequest;
 use App\Http\Resources\WorklogResource;
 use App\Services\WorklogService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -52,11 +53,19 @@ class WorklogController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return WorklogResource|JsonResponse|Response
      */
     public function show($id)
     {
-        //
+        try{
+            $worklog = $this->worklogService->get($id);
+        }catch(ModelNotFoundException $exception){
+            return response()->json([
+                'message' => "Worklog with id:$id does not exists"
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }
+        return new WorklogResource($worklog);
     }
 
     /**
