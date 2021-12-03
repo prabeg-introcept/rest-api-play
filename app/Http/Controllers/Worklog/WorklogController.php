@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Worklog;
 
+use App\Exceptions\Worklogs\UnauthorizedActionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Worklogs\StoreWorklogRequest;
 use App\Http\Requests\Worklogs\UpdateWorklogRequest;
@@ -30,11 +31,17 @@ class WorklogController extends Controller
     {
         try{
             $worklogs = $this->worklogService->all();
-        }catch(Throwable $exception){
+        }catch(UnauthorizedActionException $exception){
             return response()->json([
                 'message' => $exception->getMessage()
             ],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+                Response::HTTP_FORBIDDEN);
+        }
+        catch(Throwable $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new WorklogCollection($worklogs);
     }
@@ -68,7 +75,12 @@ class WorklogController extends Controller
     {
         try{
             $worklog = $this->worklogService->get($id);
-        }catch(ModelNotFoundException $exception){
+        }catch(UnauthorizedActionException $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+                Response::HTTP_FORBIDDEN);
+        } catch(ModelNotFoundException $exception){
             return response()->json([
                 'message' => "Worklog with id:$id does not exists"
             ],
@@ -93,6 +105,11 @@ class WorklogController extends Controller
     {
         try{
             $worklog = $this->worklogService->update($request->validated(), $id);
+        }catch(UnauthorizedActionException $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+                Response::HTTP_FORBIDDEN);
         }catch(ModelNotFoundException $exception){
             return response()->json([
                 'message' => "Worklog with id:$id does not exists"
@@ -117,6 +134,11 @@ class WorklogController extends Controller
     {
         try{
             $worklog = $this->worklogService->delete($id);
+        }catch(UnauthorizedActionException $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ],
+                Response::HTTP_FORBIDDEN);
         }catch(ModelNotFoundException $exception){
             return response()->json([
                 'message' => "Worklog with id:$id does not exists"
