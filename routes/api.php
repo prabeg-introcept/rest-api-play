@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\FileUploadController;
 use App\Http\Controllers\Api\User\WorklogController as UserWorklogController;
 use App\Http\Controllers\Api\Worklog\WorklogController;
 use Illuminate\Http\Request;
@@ -26,5 +27,6 @@ Route::prefix('v1')->group(function(){
     Route::middleware('auth:sanctum')->group(function(){
         Route::apiResource('users.worklogs', UserWorklogController::class)->only('index');
         Route::apiResource('worklogs', WorklogController::class);
+        Route::post('file-upload', FileUploadController::class);
     });
 });
