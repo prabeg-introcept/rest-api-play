@@ -30,7 +30,7 @@ class UserImageUploadService
         if (Storage::disk('local')->exists("user_image/{$data['user_id']}")) {
             Storage::delete("user_image/{$data['user_id']}");
         }
-        $filePath = '/storage/' . $data["file"]->storeAs('user_image', $data['user_id']);
+        $filePath = '/storage/' . $data["file"]->storeAs('user_image', $data['user_id'].$data->extension());
         return array(
             "file_path" => $filePath,
             "user_id" => $data['user_id']

@@ -40,7 +40,7 @@ class WorklogService
 
     public function get(int $worklogId): Worklog
     {
-        $worklog = $this->worklog->findOrFail($worklogId);
+        $worklog = $this->worklog->with(['feedbacks'])->findOrFail($worklogId);
         throw_if(auth()->user()->cannot('view', $worklog),
             UnauthorizedActionException::class,
             Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
@@ -54,7 +54,7 @@ class WorklogService
             UnauthorizedActionException::class,
             Messages::ERROR_UNAUTHORIZED_ACTION_WORKLOG
         );
-        $worklogs = $this->worklog->with('user.department')->get();
+        $worklogs = $this->worklog->with(['feedbacks'])->get();
         throw_if(!$worklogs,
             WorklogNotFoundException::class,
             Messages::ERROR_FETCH_WORKLOG
